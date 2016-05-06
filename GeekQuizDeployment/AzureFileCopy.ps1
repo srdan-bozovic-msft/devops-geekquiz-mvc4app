@@ -393,26 +393,10 @@ if ($enableDetailedLoggingString -ne "true")
 $agentHomeDir = $env:AGENT_HOMEDIRECTORY
 $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
 
-# try to get storage key from RDFE, if not exists will try from ARM endpoint
-try
-{
-    Switch-AzureMode AzureServiceManagement
+# Getting connection type (Certificate/UserNamePassword/SPN) used for the task
+$connectionType = Get-ConnectionType -connectedServiceName $connectedServiceName -distributedTaskContext $distributedTaskContext
 
-    # getting storage key from RDFE
-    $storageKey = Get-AzureStorageKeyFromRDFE -storageAccountName $storageAccount
-}
-catch [Hyak.Common.CloudException]
-{
-    Write-Verbose "(RDFE)$_.Exception.Message.ToString()" -Verbose
-
-    # checking azure powershell version to make calls to ARM endpoint
-    Validate-AzurePowershellVersion
-
-    Switch-AzureMode AzureResourceManager
-
-    # getting storage account key from ARM endpoint
-    $storageKey = Get-AzureStorageKeyFromARM -storageAccountName $storageAccount
-}
+$storageKey = Get-StorageKey -storageAccountName $storageAccount -connectionType $connectionType
 
 # creating storage context to be used while creating container, sas token, deleting container
 $storageContext = New-AzureStorageContext -StorageAccountName $storageAccount -StorageAccountKey $storageKey
