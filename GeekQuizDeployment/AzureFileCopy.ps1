@@ -393,6 +393,16 @@ if ($enableDetailedLoggingString -ne "true")
 $agentHomeDir = $env:AGENT_HOMEDIRECTORY
 $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
 
+# Import all the dlls and modules which have cmdlets we need
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal"
+Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
+
+# Load all dependent files for execution
+Import-Module ./AzureFileCopyJob.ps1 -Force
+Import-Module ./Utility.ps1 -Force
+
 # Importing required version of azure cmdlets according to azureps installed on machine
 $azureUtility = Get-AzureUtility
 
