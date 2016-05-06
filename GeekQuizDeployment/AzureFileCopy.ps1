@@ -393,6 +393,12 @@ if ($enableDetailedLoggingString -ne "true")
 $agentHomeDir = $env:AGENT_HOMEDIRECTORY
 $azCopyLocation = Join-Path $agentHomeDir -ChildPath "Agent\Worker\Tools\AzCopy"
 
+# Importing required version of azure cmdlets according to azureps installed on machine
+$azureUtility = Get-AzureUtility
+
+Write-Verbose -Verbose "Loading $azureUtility"
+Import-Module ./$azureUtility -Force
+
 # Getting connection type (Certificate/UserNamePassword/SPN) used for the task
 $connectionType = Get-ConnectionType -connectedServiceName $connectedServiceName -distributedTaskContext $distributedTaskContext
 
