@@ -400,7 +400,6 @@ Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal
 Import-Module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
 
 # Load all dependent files for execution
-Import-Module ./AzureFileCopyJob.ps1 -Force
 Import-Module ./Utility.ps1 -Force
 
 # Importing required version of azure cmdlets according to azureps installed on machine
